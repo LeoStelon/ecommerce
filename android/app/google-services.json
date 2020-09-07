@@ -1,0 +1,64 @@
+{
+  "project_info": {
+    "project_number": "768101665963",
+    "firebase_url": "https://dataviv-ecommerce.firebaseio.com",
+    "project_id": "dataviv-ecommerce",
+    "storage_bucket": "dataviv-ecommerce.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:768101665963:android:59d55f4350a01afea1fbee",
+        "android_client_info": {
+          "package_name": "com.sumit.dataviv.ecommerce"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "768101665963-pptjacueuprac7rrv3fk514tlr2ir644.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sumit.dataviv.ecommerce",
+            "certificate_hash": "aed4419d9b3c1c90c78c12dd37a62f37b0d81642"
+          }
+        },
+        {
+          "client_id": "768101665963-sp6lt0b4b84eti24npr8s71hq25n79po.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sumit.dataviv.ecommerce",
+            "certificate_hash": "4a32cca18b8fa0b50fecf4837f95be27d1028d80"
+          }
+        },
+        {
+          "client_id": "768101665963-fc8uchpvdvkhbhhcfl83iosr0p62d12m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sumit.dataviv.ecommerce",
+            "certificate_hash": "1f5e7ffb905359c12da3539902ae11f0dd524515"
+          }
+        },
+        {
+          "client_id": "768101665963-bq80vrld164jn9pk85ri3rjo4ts1cb60.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCexKPsdcSDjgdpdJptadq7TTv1_Z8OUrQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "768101665963-bq80vrld164jn9pk85ri3rjo4ts1cb60.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
