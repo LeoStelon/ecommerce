@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:ecommerce/providers/productProvider.dart';
 import 'package:ecommerce/ui_view/categoryproducts/categoryproductlist.dart';
-import 'package:ecommerce/ui_view/categoryproducts/stackcontainers.dart';
 import 'package:flutter/material.dart';
 
 class CategoryProducts extends StatefulWidget {
@@ -137,7 +136,6 @@ class _CategoryProductsState extends State<CategoryProducts> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getAllCategoryProducts();
   }

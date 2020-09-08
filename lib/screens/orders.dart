@@ -50,7 +50,6 @@ class _OrdersState extends State<Orders> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getOrders();
   }

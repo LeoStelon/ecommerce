@@ -41,7 +41,6 @@ class _WalletState extends State<Wallet> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     initialize();
   }

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:content_placeholder/content_placeholder.dart';
 import 'package:ecommerce/constant/colors.dart';
 import 'package:ecommerce/providers/addressesProvider.dart';
+import 'package:ecommerce/providers/cart.dart';
 import 'package:ecommerce/providers/cartProvider.dart';
 import 'package:ecommerce/providers/global.dart';
 import 'package:ecommerce/providers/ordersProvider.dart';
@@ -10,7 +11,6 @@ import 'package:ecommerce/screens/editaddress.dart';
 import 'package:ecommerce/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sqflite/sqflite.dart';
 
 class Checkout extends StatefulWidget {
   @override
@@ -29,13 +29,13 @@ class _CheckoutState extends State<Checkout> {
   bool isTaxApplied = false;
   bool isPromoCodeApplied = false;
   int totalCartProducts;
-  int deliveryCharge = 20;
+  double deliveryCharge = 20;
   int taxAndFess = 0;
-  int grandTotal;
-  int subTotal;
+  double grandTotal;
+  double subTotal;
   int discount = 0;
   String paymentMode = "cod";
-  List<Map<String, dynamic>> cartProducts;
+  List cartProducts;
   bool isAddressEmpty = false;
   List<dynamic> allAddresses = [];
   bool isOrderPlacingLoading = false;
@@ -69,34 +69,38 @@ class _CheckoutState extends State<Checkout> {
   }
 
   Future getCartDetails() async {
-    var dbPath = await getDatabasesPath();
-    String path = dbPath + "DATAVIV.db";
-    Database db = await openDatabase(
-      path,
-      version: 1,
-      onCreate: (Database db, int version) async {
-        await db.execute(
-            'CREATE TABLE dv_cart (id INTEGER PRIMARY KEY, product_id TEXT,product_name TEXT,product_image TEXT, eff_price INTEGER,product_qty INTEGER,total_product_pricing INTEGER)');
-      },
-    );
+    // var dbPath = await getDatabasesPath();
+    // String path = dbPath + "DATAVIV.db";
+    // Database db = await openDatabase(
+    //   path,
+    //   version: 1,
+    //   onCreate: (Database db, int version) async {
+    //     await db.execute(
+    //         'CREATE TABLE dv_cart (id INTEGER PRIMARY KEY, product_id TEXT,product_name TEXT,product_image TEXT, eff_price INTEGER,product_qty INTEGER,total_product_pricing INTEGER)');
+    //   },
+    // );
 
-    List<Map<String, dynamic>> productslist =
-        await db.rawQuery('SELECT * FROM dv_cart');
-    List<Map<String, dynamic>> TEMP2 =
-        await db.rawQuery('SELECT total_product_pricing FROM dv_cart');
-    int amount = 0;
-    for (int k = 0; k < TEMP2.length; k++) {
-      amount += TEMP2[k]["total_product_pricing"];
-    }
+    // List<Map<String, dynamic>> productslist =
+    //     await db.rawQuery('SELECT * FROM dv_cart');
+
+    // List<Map<String, dynamic>> TEMP2 =
+    //     await db.rawQuery('SELECT total_product_pricing FROM dv_cart');
+    // int amount = 0;
+    // for (int k = 0; k < TEMP2.length; k++) {
+    //   amount += TEMP2[k]["total_product_pricing"];
+    // }
+    print('start');
+    var response = await CartProvider().getAllProducts();
+    final Map<String, dynamic> responseBody = await json.decode(response.body);
     setState(() {
-      totalCartProducts = productslist.length;
-      subTotal = amount;
-      cartProducts = productslist;
+      subTotal = responseBody['data']['get_cart_sub_total'];
+      deliveryCharge = responseBody['data']['deliveryCharges'];
+      cartProducts = responseBody['data']['products'];
     });
     setState(() {
       grandTotal = subTotal + deliveryCharge + taxAndFess;
     });
-    if (productslist.length == 0) {
+    if (cartProducts.length == 0) {
       setState(() {
         isCartEmpty = true;
       });
@@ -201,24 +205,27 @@ class _CheckoutState extends State<Checkout> {
         );
       },
     );
-    var dbPath = await getDatabasesPath();
-    String path = dbPath + "DATAVIV.db";
-    Database db = await openDatabase(
-      path,
-      version: 1,
-      onCreate: (Database db, int version) async {
-        await db.execute(
-            'CREATE TABLE dv_cart (id INTEGER PRIMARY KEY, product_id TEXT,product_name TEXT,product_image TEXT, eff_price INTEGER,product_qty INTEGER,total_product_pricing INTEGER)');
-      },
-    );
+    // var dbPath = await getDatabasesPath();
+    // String path = dbPath + "DATAVIV.db";
+    // Database db = await openDatabase(
+    //   path,
+    //   version: 1,
+    //   onCreate: (Database db, int version) async {
+    //     await db.execute(
+    //         'CREATE TABLE dv_cart (id INTEGER PRIMARY KEY, product_id TEXT,product_name TEXT,product_image TEXT, eff_price INTEGER,product_qty INTEGER,total_product_pricing INTEGER)');
+    //   },
+    // );
+    // List<Map<String, dynamic>> productslist =
+    //     await db.rawQuery('SELECT * FROM dv_cart');
+    var response = await CartProvider().getAllProducts();
+    final Map<String, dynamic> responseBody = await json.decode(response.body);
 
-    List<Map<String, dynamic>> productslist =
-        await db.rawQuery('SELECT * FROM dv_cart');
     List<Map<String, dynamic>> tempProductsList = [];
-    for (int i = 0; i < productslist.length; i++) {
+    for (int i = 0; i < responseBody['data']['products'].length; i++) {
       Map<String, dynamic> tempData = {
-        "product_id": productslist[i]["product_id"],
-        "quantity": productslist[i]["product_qty"]
+        "product_id": responseBody['data']['products'][i]["product_id"],
+        "quantity": responseBody['data']['products'][i]["product_quantity"]
+        // "quantity": responseBody['data']['products'][i]["product_qty"]
       };
       tempProductsList.add(tempData);
     }
@@ -250,10 +257,11 @@ class _CheckoutState extends State<Checkout> {
             if (responseBody["status"] == "success" &&
                 responseBody["message"] == "OK") {
               Navigator.pop(context);
-              var dbPath = await getDatabasesPath();
-              String path = dbPath + "DATAVIV.db";
-              Database db = await openDatabase(path);
-              await db.execute('DELETE FROM dv_cart');
+              // var dbPath = await getDatabasesPath();
+              // String path = dbPath + "DATAVIV.db";
+              // Database db = await openDatabase(path);
+              // await db.execute('DELETE FROM dv_cart');
+              // Empty the cart here
               setState(() {
                 isCartEmpty = true;
                 isOrderPlacingLoading = true;
@@ -375,7 +383,6 @@ class _CheckoutState extends State<Checkout> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     initialize();
   }

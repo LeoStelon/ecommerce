@@ -1,7 +1,9 @@
+import 'dart:convert';
+
 import 'package:ecommerce/constant/colors.dart';
+import 'package:ecommerce/providers/cart.dart';
 import 'package:ecommerce/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
 
 class Cart extends StatefulWidget {
   @override
@@ -13,92 +15,30 @@ class _CartState extends State<Cart> {
       new GlobalKey<ScaffoldState>();
   bool isLoading = true;
   bool isCartEmpty = false;
-  int totalCartProducts;
-  int deliveryCharge = 20;
+  double deliveryCharge = 20;
   int taxAndFess = 0;
-  int grandTotal;
-  int subTotal;
-  int discount;
-  List<Map<String, dynamic>> cartProducts;
+  double grandTotal;
+  double subTotal;
+  double discount;
+  List cartProducts;
+  bool updateItem = false;
 
-  addToCart(String productId) async {
-    var dbPath = await getDatabasesPath();
-    String path = dbPath + "DATAVIV.db";
-    //await deleteDatabase(path);
-    Database db = await openDatabase(
-      path,
-      version: 1,
-      onCreate: (Database db, int version) async {
-        await db.execute(
-            'CREATE TABLE dv_cart (id INTEGER PRIMARY KEY, product_id TEXT,product_name TEXT,product_image TEXT, eff_price INTEGER,product_qty INTEGER,total_product_pricing INTEGER)');
-      },
-    );
-    List<Map<String, dynamic>> list = await db.rawQuery(
-        'SELECT * FROM dv_cart WHERE product_id=?', [productId.toString()]);
-    int price = list[0]['eff_price'];
-    int qty = list[0]['product_qty'] + 1;
-    int totalPrice = qty * price;
-    int count = await db.rawUpdate(
-        'UPDATE dv_cart SET product_qty = ?, total_product_pricing = ? WHERE product_id = ?',
-        [qty, totalPrice, productId]);
-    print(count);
-    getCartDetails();
-  }
-
-  void deleteToCart(String productId) async {
-    var dbPath = await getDatabasesPath();
-    String path = dbPath + "DATAVIV.db";
-    var db = await openDatabase(path);
-    List<Map<String, dynamic>> list = await db
-        .rawQuery('SELECT * FROM dv_cart WHERE product_id=?', [productId]);
-    if (list[0]["product_qty"] == 1) {
-      int id = await db
-          .rawDelete('DELETE FROM dv_cart WHERE product_id = ?', [productId]);
-      print(id);
-      getCartDetails();
-    } else {
-      int price = list[0]['eff_price'];
-      int qty = list[0]['product_qty'] - 1;
-      int totalPrice = qty * price;
-      int count = await db.rawUpdate(
-          'UPDATE dv_cart SET product_qty = ?, total_product_pricing = ? WHERE product_id = ?',
-          [qty, totalPrice, productId]);
-      print(count);
-      getCartDetails();
-    }
-  }
-
+  //All products are fetched here
   Future getCartDetails() async {
-    var dbPath = await getDatabasesPath();
-    String path = dbPath + "DATAVIV.db";
-    Database db = await openDatabase(
-      path,
-      version: 1,
-      onCreate: (Database db, int version) async {
-        await db.execute(
-            'CREATE TABLE dv_cart (id INTEGER PRIMARY KEY, product_id TEXT,product_name TEXT,product_image TEXT, eff_price INTEGER,product_qty INTEGER,total_product_pricing INTEGER)');
-      },
-    );
-
-    List<Map<String, dynamic>> productslist =
-        await db.rawQuery('SELECT * FROM dv_cart');
-    List<Map<String, dynamic>> TEMP2 =
-        await db.rawQuery('SELECT total_product_pricing FROM dv_cart');
-    int amount = 0;
-    for (int k = 0; k < TEMP2.length; k++) {
-      amount += TEMP2[k]["total_product_pricing"];
-    }
+    //NEW
+    //Get all products from DB
+    print('start');
+    var response = await CartProvider().getAllProducts();
+    final Map<String, dynamic> responseBody = await json.decode(response.body);
     setState(() {
-      totalCartProducts = productslist.length;
-      subTotal = amount;
-      cartProducts = productslist;
-      print('This is the cart products');
-      print(cartProducts);
+      subTotal = responseBody['data']['get_cart_sub_total'];
+      deliveryCharge = responseBody['data']['deliveryCharges'];
+      cartProducts = responseBody['data']['products'];
     });
     setState(() {
       grandTotal = subTotal + deliveryCharge + taxAndFess;
     });
-    if (productslist.length == 0) {
+    if (cartProducts.length == 0) {
       setState(() {
         isCartEmpty = true;
       });
@@ -108,13 +48,14 @@ class _CartState extends State<Cart> {
         isLoading = false;
       });
     });
+    print('end');
   }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   getCartDetails();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    getCartDetails();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -162,6 +103,7 @@ class _CartState extends State<Cart> {
                     margin: EdgeInsets.all(10.0),
                     child: Column(
                       children: <Widget>[
+                        //Sub total
                         Container(
                           margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
                           child: Card(
@@ -267,6 +209,8 @@ class _CartState extends State<Cart> {
                             ),
                           ),
                         ),
+
+                        //List of all products
                         Container(
                           margin: EdgeInsets.only(top: 10.0, bottom: 10.0),
                           child: Card(
@@ -282,8 +226,9 @@ class _CartState extends State<Cart> {
                                   bottom: 10.0),
                               child: Column(
                                 children: cartProducts
+                                    //Cart Card Component
                                     .map((product) => Container(
-                                          //color: Colors.orange,
+                                          // color: Colors.orange,
                                           margin: EdgeInsets.only(bottom: 20.0),
                                           width:
                                               MediaQuery.of(context).size.width,
@@ -300,7 +245,7 @@ class _CartState extends State<Cart> {
                                                           .width *
                                                       0.23,
                                                   child: Image.network(
-                                                    product["product_image"],
+                                                    product["product_images"],
                                                   ),
                                                 ),
                                                 SizedBox(
@@ -331,10 +276,10 @@ class _CartState extends State<Cart> {
                                                       child: Row(
                                                         children: <Widget>[
                                                           Text(
-                                                            product["product_qty"]
+                                                            product["product_quantity"]
                                                                     .toString() +
                                                                 " × Rs. " +
-                                                                product["eff_price"]
+                                                                product["product_price"]
                                                                     .toString(),
                                                             style: TextStyle(
                                                               color: ThemeColors
@@ -381,14 +326,28 @@ class _CartState extends State<Cart> {
                                                                         .blueColor,
                                                                   ),
                                                                   onPressed:
-                                                                      () {
-                                                                    deleteToCart(
-                                                                        product[
-                                                                            "product_id"]);
+                                                                      () async {
+                                                                    setState(
+                                                                        () {
+                                                                      updateItem =
+                                                                          true;
+                                                                    });
+                                                                    //Decrement product
+                                                                    await CartProvider()
+                                                                        .decrementProduct(
+                                                                      product[
+                                                                          "product_id"],
+                                                                    );
+                                                                    await getCartDetails();
+                                                                    setState(
+                                                                        () {
+                                                                      updateItem =
+                                                                          false;
+                                                                    });
                                                                   },
                                                                 ),
                                                                 Text(
-                                                                  product["product_qty"]
+                                                                  product["product_quantity"]
                                                                       .toString(),
                                                                 ),
                                                                 IconButton(
@@ -398,10 +357,24 @@ class _CartState extends State<Cart> {
                                                                         .blueColor,
                                                                   ),
                                                                   onPressed:
-                                                                      () {
-                                                                    addToCart(
-                                                                        product[
-                                                                            "product_id"]);
+                                                                      () async {
+                                                                    setState(
+                                                                        () {
+                                                                      updateItem =
+                                                                          true;
+                                                                    });
+                                                                    //Increment product
+                                                                    await CartProvider()
+                                                                        .incrementProduct(
+                                                                      product[
+                                                                          "product_id"],
+                                                                    );
+                                                                    await getCartDetails();
+                                                                    setState(
+                                                                        () {
+                                                                      updateItem =
+                                                                          false;
+                                                                    });
                                                                   },
                                                                 ),
                                                               ],
@@ -411,12 +384,9 @@ class _CartState extends State<Cart> {
                                                             ),
                                                           ),
                                                           Container(
-                                                            //color: Colors.blue,
-                                                            //alignment: Alignment
-                                                            //s   .center,
                                                             child: Text(
                                                               "Rs. " +
-                                                                  product["total_product_pricing"]
+                                                                  product["get_product_total"]
                                                                       .toString(),
                                                               style: TextStyle(
                                                                 color: ThemeColors
@@ -445,6 +415,7 @@ class _CartState extends State<Cart> {
                     ),
                   ),
                 ),
+      //Check Out Button
       bottomNavigationBar: isLoading || isCartEmpty
           ? null
           : Container(
@@ -460,7 +431,7 @@ class _CartState extends State<Cart> {
                 color: ThemeColors.blueColor,
                 textColor: Colors.grey[100],
                 child: Text(
-                  "Checkout",
+                  updateItem == true ? "Updating Cart" : "Checkout",
                   style: TextStyle(
                     fontSize: 2.7 * SizeConfig.textMultiplier,
                   ),

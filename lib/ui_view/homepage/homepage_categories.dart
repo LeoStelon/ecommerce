@@ -1,5 +1,4 @@
 import 'package:ecommerce/screens/categoryproducts.dart';
-import 'package:ecommerce/screens/home.dart';
 import 'package:ecommerce/size_config.dart';
 import 'package:flutter/material.dart';
 

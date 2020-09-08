@@ -47,17 +47,6 @@ class _HomeState extends State<Home> {
   }
 
   logoutCustomer() async {
-    var dbPath = await getDatabasesPath();
-    String path = dbPath + "DATAVIV.db";
-    Database db = await openDatabase(
-      path,
-      version: 1,
-      onCreate: (Database db, int version) async {
-        await db.execute(
-            'CREATE TABLE dv_cart (id INTEGER PRIMARY KEY, product_id TEXT,product_name TEXT,product_image TEXT, eff_price INTEGER,product_qty INTEGER,total_product_pricing INTEGER)');
-      },
-    );
-    //await db.execute('DELETE FROM dv_cart');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     Global _global = Global();
     await prefs.remove("userDetails");
@@ -127,7 +116,6 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     initialize();
     homePageContent();

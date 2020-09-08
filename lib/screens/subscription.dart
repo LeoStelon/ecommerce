@@ -146,7 +146,6 @@ class _SubscriptionState extends State<Subscription> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getAllSubscription();
   }
@@ -496,7 +495,6 @@ class _SubscriptionAlertState extends State<SubscriptionAlert> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     setState(() {
       id = returnArrIndex(widget.scheduleType);

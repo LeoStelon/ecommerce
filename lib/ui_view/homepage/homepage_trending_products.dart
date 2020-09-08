@@ -1,8 +1,8 @@
 import 'package:ecommerce/constant/colors.dart';
 import 'package:ecommerce/constant/images.dart';
+import 'package:ecommerce/providers/cart.dart';
 import 'package:ecommerce/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:basic_utils/basic_utils.dart';
 
 class HomePageTrendingProducts extends StatefulWidget {
@@ -28,89 +28,94 @@ class _HomePageTrendingProductsState extends State<HomePageTrendingProducts> {
   }
 
   addToCart(String productId) async {
-    var dbPath = await getDatabasesPath();
-    String path = dbPath + "DATAVIV.db";
-    //await deleteDatabase(path);
-    Database db = await openDatabase(
-      path,
-      version: 1,
-      onCreate: (Database db, int version) async {
-        await db.execute(
-            'CREATE TABLE dv_cart (id INTEGER PRIMARY KEY, product_id TEXT,product_name TEXT,product_image TEXT, eff_price INTEGER,product_qty INTEGER,total_product_pricing INTEGER)');
-      },
+    //   var dbPath = await getDatabasesPath();
+    //   String path = dbPath + "DATAVIV.db";
+    //   //await deleteDatabase(path);
+    //   Database db = await openDatabase(
+    //     path,
+    //     version: 1,
+    //     onCreate: (Database db, int version) async {
+    //       await db.execute(
+    //           'CREATE TABLE dv_cart (id INTEGER PRIMARY KEY, product_id TEXT,product_name TEXT,product_image TEXT, eff_price INTEGER,product_qty INTEGER,total_product_pricing INTEGER)');
+    //     },
+    //   );
+    //   List<Map<String, dynamic>> list = await db.rawQuery(
+    //       'SELECT * FROM dv_cart WHERE product_id=?', [productId.toString()]);
+    //   for (int i = 0; i < widget.trendingProductsList.length; i++) {
+    //     if (widget.trendingProductsList[i]["product_id"] ==
+    //         productId.toString()) {
+    //       double TEMP_PRICE = widget.trendingProductsList[i]['product_price'];
+    //       double TEMP_DISCOUNT = widget.trendingProductsList[i]['discount'];
+    //       if (widget.trendingProductsList[i]["discount"] != 0.0 &&
+    //           widget.trendingProductsList[i]["discount"] != null &&
+    //           widget.trendingProductsList[i]["discount"] != 0) {
+    //         int p = TEMP_PRICE.toInt();
+    //         int d = TEMP_DISCOUNT.toInt();
+    //         productEffPriceTemp = p - d;
+    //         productMRPriceTemp = p;
+    //       } else {
+    //         productEffPriceTemp = TEMP_PRICE.toInt();
+    //         productMRPriceTemp = TEMP_PRICE.toInt();
+    //       }
+    //       productNameTemp = widget.trendingProductsList[i]['product_name'];
+    //       productImgTemp = widget.trendingProductsList[i]["product_images_URL"];
+    //     }
+    //   }
+    //   if (list.length == 0) {
+    //     int id = await db.rawInsert(
+    //         "INSERT INTO dv_cart(product_id,product_name,product_image,eff_price,product_qty,total_product_pricing)VALUES(?,?,?,?,?,?)",
+    //         [
+    //           productId,
+    //           productNameTemp,
+    //           productImgTemp,
+    //           productEffPriceTemp,
+    //           1,
+    //           productEffPriceTemp
+    //         ]);
+    //     print(id);
+    //     widget._scaffoldKey.currentState.showSnackBar(
+    //       SnackBar(
+    //         content: Text('Product added to cart!'),
+    //         duration: Duration(milliseconds: 1000),
+    //       ),
+    //     );
+    //   } else if (list[0]['product_qty'] == 10) {
+    //     widget._scaffoldKey.currentState.showSnackBar(
+    //       SnackBar(
+    //         content: Text('You can add maximum 10 product qty!'),
+    //         duration: Duration(milliseconds: 1000),
+    //       ),
+    //     );
+    //   } else {
+    //     int price = list[0]['eff_price'];
+    //     int qty = list[0]['product_qty'] + 1;
+    //     int totalPrice = qty * price;
+    //     int count = await db.rawUpdate(
+    //         'UPDATE dv_cart SET product_qty = ?, total_product_pricing = ? WHERE product_id = ?',
+    //         [qty, totalPrice, productId]);
+    //     print(count);
+    //     widget._scaffoldKey.currentState.showSnackBar(
+    //       SnackBar(
+    //         content: Text('Product quantity has been updated!'),
+    //         duration: Duration(milliseconds: 1000),
+    //       ),
+    //     );
+    //   }
+    //   List<Map<String, dynamic>> Totallist =
+    //       await db.rawQuery('SELECT * FROM dv_cart');
+    //   print(Totallist);
+    CartProvider().addFirstProduct(productId);
+    widget._scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        content: Text('Product has been added to cart'),
+        duration: Duration(milliseconds: 1000),
+      ),
     );
-    List<Map<String, dynamic>> list = await db.rawQuery(
-        'SELECT * FROM dv_cart WHERE product_id=?', [productId.toString()]);
-    for (int i = 0; i < widget.trendingProductsList.length; i++) {
-      if (widget.trendingProductsList[i]["product_id"] ==
-          productId.toString()) {
-        double TEMP_PRICE = widget.trendingProductsList[i]['product_price'];
-        double TEMP_DISCOUNT = widget.trendingProductsList[i]['discount'];
-        if (widget.trendingProductsList[i]["discount"] != 0.0 &&
-            widget.trendingProductsList[i]["discount"] != null &&
-            widget.trendingProductsList[i]["discount"] != 0) {
-          int p = TEMP_PRICE.toInt();
-          int d = TEMP_DISCOUNT.toInt();
-          productEffPriceTemp = p - d;
-          productMRPriceTemp = p;
-        } else {
-          productEffPriceTemp = TEMP_PRICE.toInt();
-          productMRPriceTemp = TEMP_PRICE.toInt();
-        }
-        productNameTemp = widget.trendingProductsList[i]['product_name'];
-        productImgTemp = widget.trendingProductsList[i]["product_images_URL"];
-      }
-    }
-    if (list.length == 0) {
-      int id = await db.rawInsert(
-          "INSERT INTO dv_cart(product_id,product_name,product_image,eff_price,product_qty,total_product_pricing)VALUES(?,?,?,?,?,?)",
-          [
-            productId,
-            productNameTemp,
-            productImgTemp,
-            productEffPriceTemp,
-            1,
-            productEffPriceTemp
-          ]);
-      print(id);
-      widget._scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text('Product added to cart!'),
-          duration: Duration(milliseconds: 1000),
-        ),
-      );
-    } else if (list[0]['product_qty'] == 10) {
-      widget._scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text('You can add maximum 10 product qty!'),
-          duration: Duration(milliseconds: 1000),
-        ),
-      );
-    } else {
-      int price = list[0]['eff_price'];
-      int qty = list[0]['product_qty'] + 1;
-      int totalPrice = qty * price;
-      int count = await db.rawUpdate(
-          'UPDATE dv_cart SET product_qty = ?, total_product_pricing = ? WHERE product_id = ?',
-          [qty, totalPrice, productId]);
-      print(count);
-      widget._scaffoldKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text('Product quantity has been updated!'),
-          duration: Duration(milliseconds: 1000),
-        ),
-      );
-    }
-    List<Map<String, dynamic>> Totallist =
-        await db.rawQuery('SELECT * FROM dv_cart');
-    print(Totallist);
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    //getAllTrendingProducts();
   }
 
   @override

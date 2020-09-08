@@ -45,10 +45,6 @@ class _ProfileState extends State<Profile> {
   }
 
   logoutCustomer() async {
-    //var dbPath = await getDatabasesPath();
-    //String path = dbPath + "DATAVIV.db";
-    //Database db = await openDatabase(path);
-    //await db.execute('DELETE FROM dv_cart');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     Global _global = Global();
     await prefs.remove("userDetails");
