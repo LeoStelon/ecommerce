@@ -289,34 +289,34 @@ class _HomeState extends State<Home> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(top: 10, bottom: 10),
-                      child: Text("Calendar goes here"),
+                    // Container(
+                    //   margin: EdgeInsets.only(top: 10, bottom: 10),
+                    //   child: Text("Calendar goes here"),
 
-                      ///  Used for daily subscriptions products
-                      /// Using above child for now as placeholder
-                      // child: CustomHorizontalCalendar(
-                      //   inintialDate: DateTime.now(),
-                      //   height: 60,
-                      //   builder: (context, i, d, width) {
-                      //     if (i != 1)
-                      //       return DateRow(
-                      //         d,
-                      //         width: width,
-                      //       );
-                      //     else
-                      //       return DateRow(
-                      //         d,
-                      //         background: Colors.white,
-                      //         selectedDayStyle: TextStyle(color: Colors.blue),
-                      //         selectedDayOfWeekStyle:
-                      //             TextStyle(color: Colors.blue),
-                      //         selectedMonthStyle: TextStyle(color: Colors.blue),
-                      //         width: width,
-                      //       );
-                      //   },
-                      // ),
-                    ),
+                    //   ///  Used for daily subscriptions products
+                    //   /// Using above child for now as placeholder
+                    //   // child: CustomHorizontalCalendar(
+                    //   //   inintialDate: DateTime.now(),
+                    //   //   height: 60,
+                    //   //   builder: (context, i, d, width) {
+                    //   //     if (i != 1)
+                    //   //       return DateRow(
+                    //   //         d,
+                    //   //         width: width,
+                    //   //       );
+                    //   //     else
+                    //   //       return DateRow(
+                    //   //         d,
+                    //   //         background: Colors.white,
+                    //   //         selectedDayStyle: TextStyle(color: Colors.blue),
+                    //   //         selectedDayOfWeekStyle:
+                    //   //             TextStyle(color: Colors.blue),
+                    //   //         selectedMonthStyle: TextStyle(color: Colors.blue),
+                    //   //         width: width,
+                    //   //       );
+                    //   //   },
+                    //   // ),
+                    // ),
                     Container(
                       margin: EdgeInsets.only(left: 10.0),
                       child: Text(

@@ -107,12 +107,14 @@ packages:
     source: hosted
     version: "2.0.1"
   firebase_auth_web:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: firebase_auth_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.0+1"
+      path: "packages/firebase_auth/firebase_auth_web"
+      ref: HEAD
+      resolved-ref: c017b7de03218e9e8aa5047a52c9ccb711b69a08
+      url: "https://github.com/phamnhuvu-dev/flutterfire.git"
+    source: git
+    version: "0.3.0-dev.1"
   firebase_core:
     dependency: "direct main"
     description:
@@ -246,7 +248,7 @@ packages:
       name: pin_input_text_field
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.5"
+    version: "3.1.1"
   plugin_platform_interface:
     dependency: transitive
     description:

@@ -79,7 +79,7 @@ class _ProfileState extends State<Profile> {
       body: SingleChildScrollView(
         child: Center(
           child: Container(
-            width: MediaQuery.of(context).size.width / 3,
+            width: MediaQuery.of(context).size.width / 2.5,
             margin: EdgeInsets.all(10.0),
             child: Column(
               children: <Widget>[
@@ -182,7 +182,6 @@ class _ProfileState extends State<Profile> {
                                         height: 15,
                                       )
                                     : Container(
-                                        width: 0.25 * SizeConfig.screenWidth,
                                         //color: Colors.red,
                                         alignment: Alignment.center,
                                         child: Text(

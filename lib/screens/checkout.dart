@@ -5,7 +5,6 @@ import 'package:ecommerce/providers/addressesProvider.dart';
 import 'package:ecommerce/providers/cart.dart';
 import 'package:ecommerce/providers/cartProvider.dart';
 import 'package:ecommerce/providers/global.dart';
-import 'package:ecommerce/providers/ordersProvider.dart';
 import 'package:ecommerce/screens/addaddress.dart';
 import 'package:ecommerce/screens/editaddress.dart';
 import 'package:ecommerce/size_config.dart';
@@ -217,168 +216,133 @@ class _CheckoutState extends State<Checkout> {
     // );
     // List<Map<String, dynamic>> productslist =
     //     await db.rawQuery('SELECT * FROM dv_cart');
-    var response = await CartProvider().getAllProducts();
-    final Map<String, dynamic> responseBody = await json.decode(response.body);
 
-    List<Map<String, dynamic>> tempProductsList = [];
-    for (int i = 0; i < responseBody['data']['products'].length; i++) {
-      Map<String, dynamic> tempData = {
-        "product_id": responseBody['data']['products'][i]["product_id"],
-        "quantity": responseBody['data']['products'][i]["product_quantity"]
-        // "quantity": responseBody['data']['products'][i]["product_qty"]
-      };
-      tempProductsList.add(tempData);
-    }
-    ordersProvider _ordersProvider = ordersProvider();
-    Global _global = Global();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    Map<String, dynamic> userDetails =
-        await json.decode(prefs.get("userDetails"));
-    int userId = userDetails["userId"];
-    await _global.getAuthToken().then((dynamic token) async {
-      if (token != null) {
-        await _ordersProvider
-            .orderPlaced(
-                token,
-                userId,
-                tempProductsList,
-                subTotal,
-                isDeliveryChargesApplied ? deliveryCharge : 0,
-                isTaxApplied ? taxAndFess : 0,
-                isPromoCodeApplied ? discount : 0,
-                isPromoCodeApplied ? promoCodeController.text : "",
-                grandTotal,
-                allAddresses[0],
-                paymentMode)
-            .then((dynamic response) async {
-          final Map<String, dynamic> responseBody = json.decode(response.body);
-          print(responseBody);
-          if (response.statusCode == 200) {
-            if (responseBody["status"] == "success" &&
-                responseBody["message"] == "OK") {
-              Navigator.pop(context);
-              // var dbPath = await getDatabasesPath();
-              // String path = dbPath + "DATAVIV.db";
-              // Database db = await openDatabase(path);
-              // await db.execute('DELETE FROM dv_cart');
-              // Empty the cart here
-              setState(() {
-                isCartEmpty = true;
-                isOrderPlacingLoading = true;
-              });
-              _checkoutScaffoldKey.currentState.showBottomSheet(
-                (context) => Container(
-                  height: MediaQuery.of(context).size.height * 0.6,
-                  decoration: new BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: new BorderRadius.only(
-                      topLeft: const Radius.circular(50.0),
-                      topRight: const Radius.circular(50.0),
-                    ),
-                  ),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Image.asset(
-                          "images/ok.png",
-                          width: 100,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          "Thank you for your Order.",
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontSize: 24.0,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.5,
-                          child: Text(
-                            'you can track the delivery in the "Order" section',
-                            style: TextStyle(
-                              color: Colors.black.withOpacity(0.5),
-                              fontSize: 17.0,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          margin:
-                              EdgeInsets.only(left: 20, right: 20, bottom: 10),
-                          width: MediaQuery.of(context).size.width * 0.75,
-                          child: FlatButton(
-                            disabledTextColor: Colors.grey[100],
-                            disabledColor: ThemeColors.blueColor,
-                            shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(10.0)),
-                            padding: EdgeInsets.symmetric(vertical: 12.0),
-                            onPressed: () {
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                              Navigator.pushReplacementNamed(context, "/tabs");
-                              Navigator.pushNamed(context, "/orders");
-                            },
-                            color: ThemeColors.blueColor,
-                            textColor: Colors.grey[100],
-                            child: Text(
-                              "Track Order",
-                              style: TextStyle(
-                                fontSize: 17.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        GestureDetector(
-                          child: Text(
-                            "Order Something else",
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 24.0,
-                            ),
-                          ),
-                          onTap: () {
-                            Navigator.pop(context);
-                            Navigator.pop(context);
-                            Navigator.pushReplacementNamed(context, "/tabs");
-                            Navigator.pushNamed(context, "/orders");
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.only(
-                    topLeft: const Radius.circular(50.0),
-                    topRight: const Radius.circular(50.0),
-                  ),
-                ),
-                elevation: 4.0,
-              );
-            } else {
-              Navigator.pop(context);
-              showToastMessage(responseBody["message"]);
-            }
-          } else {
-            Navigator.pop(context);
-            showToastMessage("Something went wrong. please try again");
-          }
+    var placeorder = await CartProvider().placeOrder();
+    final Map<String, dynamic> placeHolderResponse =
+        json.decode(placeorder.body);
+    print(placeHolderResponse);
+    if (placeHolderResponse['code'] == 200) {
+      if (placeHolderResponse["status"] == "success" &&
+          placeHolderResponse["message"] == "OK") {
+        Navigator.pop(context);
+        // var dbPath = await getDatabasesPath();
+        // String path = dbPath + "DATAVIV.db";
+        // Database db = await openDatabase(path);
+        // await db.execute('DELETE FROM dv_cart');
+        // Empty the cart here
+        setState(() {
+          isCartEmpty = true;
+          isOrderPlacingLoading = true;
         });
+        _checkoutScaffoldKey.currentState.showBottomSheet(
+          (context) => Container(
+            height: MediaQuery.of(context).size.height * 0.6,
+            decoration: new BoxDecoration(
+              color: Colors.white,
+              borderRadius: new BorderRadius.only(
+                topLeft: const Radius.circular(50.0),
+                topRight: const Radius.circular(50.0),
+              ),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Image.asset(
+                    "images/ok.png",
+                    width: 100,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Thank you for your Order.",
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 24.0,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    child: Text(
+                      'you can track the delivery in the "Order" section',
+                      style: TextStyle(
+                        color: Colors.black.withOpacity(0.5),
+                        fontSize: 17.0,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
+                    width: MediaQuery.of(context).size.width * 0.75,
+                    child: FlatButton(
+                      disabledTextColor: Colors.grey[100],
+                      disabledColor: ThemeColors.blueColor,
+                      shape: new RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(10.0)),
+                      padding: EdgeInsets.symmetric(vertical: 12.0),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                        Navigator.pushReplacementNamed(context, "/tabs");
+                        Navigator.pushNamed(context, "/orders");
+                      },
+                      color: ThemeColors.blueColor,
+                      textColor: Colors.grey[100],
+                      child: Text(
+                        "Track Order",
+                        style: TextStyle(
+                          fontSize: 17.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  GestureDetector(
+                    child: Text(
+                      "Order Something else",
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 24.0,
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      Navigator.pushReplacementNamed(context, "/tabs");
+                      Navigator.pushNamed(context, "/orders");
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: new BorderRadius.only(
+              topLeft: const Radius.circular(50.0),
+              topRight: const Radius.circular(50.0),
+            ),
+          ),
+          elevation: 4.0,
+        );
+      } else {
+        Navigator.pop(context);
+        showToastMessage(placeHolderResponse["message"]);
       }
-    });
+    } else {
+      Navigator.pop(context);
+      showToastMessage("Something went wrong. please try again");
+    }
   }
 
   @override

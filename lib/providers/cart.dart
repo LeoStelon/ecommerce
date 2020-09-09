@@ -91,4 +91,20 @@ class CartProvider {
     print(response.body);
     return response;
   }
+
+  //Checkout Cart
+  Future<dynamic> placeOrder() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String authToken = prefs.getString("AUTH_TOKEN");
+    final http.Response response = await http.post(
+      Inspector.baseAPIUrl + "/placeOrderViewForWeb/",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": "Token " + authToken
+      },
+    );
+    print(response.body);
+    return response;
+  }
 }

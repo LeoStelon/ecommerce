@@ -25,11 +25,16 @@ class _CartState extends State<Cart> {
 
   //All products are fetched here
   Future getCartDetails() async {
-    //NEW
     //Get all products from DB
     print('start');
     var response = await CartProvider().getAllProducts();
     final Map<String, dynamic> responseBody = await json.decode(response.body);
+    if (responseBody['data']['products'].length == 0) {
+      setState(() {
+        isCartEmpty = true;
+      });
+      return;
+    }
     setState(() {
       subTotal = responseBody['data']['get_cart_sub_total'];
       deliveryCharge = responseBody['data']['deliveryCharges'];
@@ -38,11 +43,6 @@ class _CartState extends State<Cart> {
     setState(() {
       grandTotal = subTotal + deliveryCharge + taxAndFess;
     });
-    if (cartProducts.length == 0) {
-      setState(() {
-        isCartEmpty = true;
-      });
-    }
     Future.delayed(Duration(milliseconds: 800), () {
       setState(() {
         isLoading = false;

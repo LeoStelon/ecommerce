@@ -369,39 +369,40 @@ class _LoginState extends State<Login> {
                     _buildEmailTF(),
                     _buildPasswordTF(),
                     _buildLoginBtn(),
-                    Container(
-                      margin: EdgeInsets.only(top: 20),
-                      width: MediaQuery.of(context).size.width / 3,
-                      child: RaisedButton(
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(30.0)),
-                        padding: EdgeInsets.symmetric(vertical: 15.0),
-                        onPressed: () {
-                          loginWithFacebook();
-                        },
-                        color: Color.fromRGBO(40, 114, 201, 1),
-                        textColor: Colors.grey[100],
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            FaIcon(
-                              FontAwesomeIcons.facebookF,
-                              size: 22,
-                            ),
-                            SizedBox(
-                              width: 15.0,
-                            ),
-                            Text(
-                              "Connect with facebook",
-                              style: TextStyle(
-                                fontSize: 17.0,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    //Facebook Login
+                    // Container(
+                    //   margin: EdgeInsets.only(top: 20),
+                    //   width: MediaQuery.of(context).size.width / 3,
+                    //   child: RaisedButton(
+                    //     shape: new RoundedRectangleBorder(
+                    //         borderRadius: new BorderRadius.circular(30.0)),
+                    //     padding: EdgeInsets.symmetric(vertical: 15.0),
+                    //     onPressed: () {
+                    //       // loginWithFacebook();
+                    //     },
+                    //     color: Color.fromRGBO(40, 114, 201, 1),
+                    //     textColor: Colors.grey[100],
+                    //     child: Row(
+                    //       mainAxisAlignment: MainAxisAlignment.center,
+                    //       crossAxisAlignment: CrossAxisAlignment.center,
+                    //       children: <Widget>[
+                    //         FaIcon(
+                    //           FontAwesomeIcons.facebookF,
+                    //           size: 22,
+                    //         ),
+                    //         SizedBox(
+                    //           width: 15.0,
+                    //         ),
+                    //         Text(
+                    //           "Connect with facebook",
+                    //           style: TextStyle(
+                    //             fontSize: 17.0,
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
                     Container(
                       margin: EdgeInsets.only(top: 20),
                       alignment: Alignment.center,

@@ -105,7 +105,7 @@ class _SignUpState extends State<SignUp> {
             isLoading = false;
           });
         } else if (responseBody["status"] == "False") {
-          await sendOTP("+918209446178");
+          await sendOTP(mobno);
           SharedPreferences prefs = await SharedPreferences.getInstance();
           prefs.setString("registerMobileNumber", mobno);
           prefs.setString("registerFullName", fullname);
@@ -131,7 +131,7 @@ class _SignUpState extends State<SignUp> {
     prefs.remove("registerFirebaseVerificationId");
     FirebaseAuth _auth = FirebaseAuth.instance;
     _auth.verifyPhoneNumber(
-      phoneNumber: mobileNumber,
+      phoneNumber: "+91" + mobileNumber,
       timeout: Duration(seconds: 120),
       verificationCompleted: (AuthCredential authCredentials) async {
         await prefs.setString(

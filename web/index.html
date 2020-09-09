@@ -5,6 +5,11 @@
     <meta content="IE=Edge" http-equiv="X-UA-Compatible" />
     <meta name="description" content="A new Flutter project." />
 
+    <meta
+      name="google-signin-client_id"
+      content="953451972908-u4in8ndrtgkn19f5unecdb9hk0t7ik1q.apps.googleusercontent.com"
+    />
+
     <!-- iOS meta tags & icons -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
@@ -24,6 +29,25 @@
     <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-auth.js"></script>
+
+    <!-- STEP 2: Initialize Firebase with configuration -->
+    <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyC_KcWX7yyA9vJnXB2aIB7KwnBULpm8I-c",
+        authDomain: "agri-dataviv.firebaseapp.com",
+        databaseURL: "https://agri-dataviv.firebaseio.com",
+        projectId: "agri-dataviv",
+        storageBucket: "agri-dataviv.appspot.com",
+        messagingSenderId: "953451972908",
+        appId: "1:953451972908:web:a36b1b8de554ab776b8489",
+        measurementId: "G-VRX2Q7N99Y",
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      firebase.analytics();
+    </script>
+
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {
