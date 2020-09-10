@@ -120,6 +120,23 @@ class _WalletState extends State<Wallet> {
                                       overflow: TextOverflow.clip,
                                     )
                                   ],
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    alignment: Alignment.centerRight,
+                                    //margin: EdgeInsets.only(top: 8.0, right: 15.0, bottom: 8.0),
+                                    child: FlatButton(
+                                      onPressed: () {},
+                                      child: Text("+ Add Money"),
+                                      shape: new RoundedRectangleBorder(
+                                          borderRadius:
+                                              new BorderRadius.circular(10.0)),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 5.0, horizontal: 8.0),
+                                      color: ThemeColors.blueColor,
+                                      textColor: Colors.grey[100],
+                                    ),
+                                  ),
                                 )
                               ],
                             ),

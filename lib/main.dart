@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
               //theme: AppTheme.lightTheme,
               home: Splash(),
               routes: {
-                "/tabs": (context) => Tabs(),
+                "/tabs": (context) => Tabs(index: 0),
                 "/cart": (context) => Cart(),
                 "/checkout": (context) => Checkout(),
                 "/onboarding": (context) => Onboarding(),

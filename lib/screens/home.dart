@@ -4,6 +4,7 @@ import 'package:ecommerce/constant/images.dart';
 import 'package:ecommerce/providers/global.dart';
 import 'package:ecommerce/providers/homepageProvider.dart';
 import 'package:ecommerce/providers/subscriptionProvider.dart';
+import 'package:ecommerce/screens/tabs.dart';
 import 'package:ecommerce/screens/wallet.dart';
 import 'package:ecommerce/size_config.dart';
 import 'package:ecommerce/ui_view/homepage/homepage_categories.dart';
@@ -179,6 +180,8 @@ class _HomeState extends State<Home> {
               ),
               onTap: () {
                 Navigator.pop(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Tabs(index: 2)));
               },
             ),
             Divider(
@@ -192,6 +195,15 @@ class _HomeState extends State<Home> {
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, "/subscription");
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.shopping_cart),
+              title: Text("Cart"),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Tabs(index: 1)));
               },
             ),
             ListTile(
@@ -256,23 +268,6 @@ class _HomeState extends State<Home> {
                     child: Image.asset(Images.screensBgWatermarkLogo),
                   ),
                 ),
-                Positioned(
-                  top: 20.0,
-                  right: 10.0,
-                  child: Container(
-                    //margin: EdgeInsets.only(top: 8.0, right: 15.0, bottom: 8.0),
-                    child: FlatButton(
-                      onPressed: () {},
-                      child: Text("+ Add Money"),
-                      shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(10.0)),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 8.0),
-                      color: ThemeColors.blueColor,
-                      textColor: Colors.grey[100],
-                    ),
-                  ),
-                )
               ],
             ),
             preferredSize: Size.fromHeight(30)),

@@ -33,21 +33,21 @@ class _CartState extends State<Cart> {
       setState(() {
         isCartEmpty = true;
       });
-      return;
-    }
-    setState(() {
-      subTotal = responseBody['data']['get_cart_sub_total'];
-      deliveryCharge = responseBody['data']['deliveryCharges'];
-      cartProducts = responseBody['data']['products'];
-    });
-    setState(() {
-      grandTotal = subTotal + deliveryCharge + taxAndFess;
-    });
-    Future.delayed(Duration(milliseconds: 800), () {
+    } else {
       setState(() {
-        isLoading = false;
+        subTotal = responseBody['data']['get_cart_sub_total'];
+        deliveryCharge = responseBody['data']['deliveryCharges'];
+        cartProducts = responseBody['data']['products'];
       });
-    });
+      setState(() {
+        grandTotal = subTotal + deliveryCharge + taxAndFess;
+      });
+      Future.delayed(Duration(milliseconds: 800), () {
+        setState(() {
+          isLoading = false;
+        });
+      });
+    }
     print('end');
   }
 
@@ -64,6 +64,9 @@ class _CartState extends State<Cart> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
+        iconTheme: IconThemeData(
+          color: Colors.black, //change your color here
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         title: Text(
