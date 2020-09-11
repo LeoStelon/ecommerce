@@ -189,8 +189,6 @@ class _LoginState extends State<Login> {
                 } else if (_validatePassword) {
                   FocusScope.of(context).requestFocus(nodeOne2);
                 } else if (!_validateUsername && !_validatePassword) {
-                  print(usernameController.text);
-                  print(passwordController.text);
                   _login(usernameController.text, passwordController.text);
                 } else {
                   print("Indvalid Data");

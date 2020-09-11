@@ -17,7 +17,7 @@ class CartProvider {
         "Authorization": "Token " + authToken
       },
     );
-    print(response.body);
+    // print(response.body);
     return response;
   }
 
@@ -40,7 +40,7 @@ class CartProvider {
         'product_id': productId,
       }),
     );
-    print(response.body);
+    // print(response.body);
     return response;
   }
 
@@ -64,7 +64,7 @@ class CartProvider {
         "action": "increment"
       }),
     );
-    print(response.body);
+    // print(response.body);
     return response;
   }
 

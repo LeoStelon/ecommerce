@@ -16,7 +16,7 @@ class _CartState extends State<Cart> {
   bool isLoading = true;
   bool isCartEmpty = false;
   double deliveryCharge = 20;
-  int taxAndFess = 0;
+  double taxAndFess = 0;
   double grandTotal;
   double subTotal;
   double discount;
@@ -29,25 +29,31 @@ class _CartState extends State<Cart> {
     print('start');
     var response = await CartProvider().getAllProducts();
     final Map<String, dynamic> responseBody = await json.decode(response.body);
+    print(responseBody);
+    if (responseBody['data'].runtimeType == List) {
+      return setState(() {
+        isCartEmpty = true;
+        isLoading = false;
+      });
+    }
     if (responseBody['data']['products'].length == 0) {
       setState(() {
         isCartEmpty = true;
       });
-    } else {
-      setState(() {
-        subTotal = responseBody['data']['get_cart_sub_total'];
-        deliveryCharge = responseBody['data']['deliveryCharges'];
-        cartProducts = responseBody['data']['products'];
-      });
-      setState(() {
-        grandTotal = subTotal + deliveryCharge + taxAndFess;
-      });
-      Future.delayed(Duration(milliseconds: 800), () {
-        setState(() {
-          isLoading = false;
-        });
-      });
     }
+    setState(() {
+      subTotal = responseBody['data']['get_cart_sub_total'];
+      deliveryCharge = responseBody['data']['deliveryCharges'];
+      cartProducts = responseBody['data']['products'];
+    });
+    setState(() {
+      grandTotal = subTotal + deliveryCharge + taxAndFess;
+    });
+    Future.delayed(Duration(milliseconds: 800), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
     print('end');
   }
 
